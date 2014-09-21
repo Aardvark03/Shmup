@@ -5,9 +5,6 @@ public class Player : MonoBehaviour {
     public GameObject bullet;
     public float speed;	
 	
-    void Start () {
-	}
-	
 	void Update () {
         float dt = Time.deltaTime;
         float s = dt * speed;
