@@ -10,6 +10,8 @@ public class EnemySpawner : MonoBehaviour {
     float minY;
     float maxY;
 
+    float enemyWidth;
+
     void Start() {
         if (camera == null) {
             camera = Camera.main;
@@ -26,15 +28,15 @@ public class EnemySpawner : MonoBehaviour {
         maxX = upperRightWorld.x;
         maxY = upperRightWorld.y;
 
+        enemyWidth = enemyToSpawn.renderer.bounds.extents.x;
+
         StartCoroutine("spawn");
     }
 
     IEnumerator spawn() {
         while (true) {
-            Debug.Log("Probieren!");
             if (Random.Range(0, 2) == 1) {
-                Debug.Log("Yeah!");
-                float xPos = Random.Range(minX, maxX);
+                float xPos = Random.Range(minX + enemyWidth, maxX - enemyWidth);
                 Instantiate(enemyToSpawn, new Vector3(xPos, maxY, 0f), Quaternion.Euler(0, 0, 180));
             }
             yield return new WaitForSeconds(1f);
