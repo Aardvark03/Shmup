@@ -3,20 +3,13 @@ using System.Collections;
 
 public class Biter : MonoBehaviour {
     public float speed;
-    public Camera camera;
 
     float minY;
 
     void Start() {
-        if (camera == null) {
-            camera = Camera.main;
-        }
-
         float biterHeight = renderer.bounds.extents.y;
 
-        Vector3 lowerLeft = new Vector3(0f, 0f, 0f);
-        Vector3 lowerLeftWorld = camera.ScreenToWorldPoint(lowerLeft);
-        minY = lowerLeftWorld.y - biterHeight;
+        minY = GameController.worldBounds.y - biterHeight;
     }
     
     void Update () {

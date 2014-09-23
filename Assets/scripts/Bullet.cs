@@ -3,7 +3,6 @@ using System.Collections;
 
 public class Bullet : MonoBehaviour {
     public float speed;
-    public Camera camera;
 
     public delegate void EnemyDestroyed();
     public static event EnemyDestroyed OnEnemyDestroyed; 
@@ -11,16 +10,8 @@ public class Bullet : MonoBehaviour {
     float maxY;
 
     void Start() {
-        if (camera == null) {
-            camera = Camera.main;
-        }
-
-        Vector3 upperRight = new Vector3(Screen.width, Screen.height, 0f);
-        Vector3 upperRightWorld = camera.ScreenToWorldPoint(upperRight);
-
-        maxY = upperRightWorld.y + renderer.bounds.extents.y;
+        maxY = GameController.worldBounds.y + GameController.worldBounds.height + renderer.bounds.extents.y;
     }
-
 	
 	void Update () {
         float dt = Time.deltaTime;

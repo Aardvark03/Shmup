@@ -4,7 +4,6 @@ using System.Collections;
 public class Player : MonoBehaviour {
     public GameObject bullet;
     public float speed;
-    public Camera camera;
 
     public delegate void GameOver();
     public static event GameOver OnGameOver;
@@ -13,6 +12,9 @@ public class Player : MonoBehaviour {
 	void Update () {
         float dt = Time.deltaTime;
         float s = dt * speed;
+
+        Rect worldBounds = GameController.worldBounds;
+        float width = renderer.bounds.extents.x;
 
         Vector3 currentPosition = rigidbody2D.position;
         Vector3 targetPosition = currentPosition;
@@ -23,8 +25,14 @@ public class Player : MonoBehaviour {
         if (Input.GetKey("d")) {
             targetPosition += new Vector3(s, 0, 0);
         }
-        
+
+        if (targetPosition.x - width < worldBounds.x || targetPosition.x + width > worldBounds.x + worldBounds.width) {
+            targetPosition = currentPosition;
+        }
+
+
         rigidbody2D.MovePosition(targetPosition);
+
 
         if (Input.GetKeyDown("space")) {
             Instantiate(bullet, transform.position + new Vector3(-0.05f, 0, 0), Quaternion.identity);
