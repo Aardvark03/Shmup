@@ -1,9 +1,12 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class GameController : MonoBehaviour {
     int kills;
     public Camera camera;
+    public Text scoreText;
+    public GameObject playerPrefab;
 
     public static Rect worldBounds;
 
@@ -30,14 +33,22 @@ public class GameController : MonoBehaviour {
 
     void OnEnemyDestroyed() {
         kills += 1;
-        Debug.Log("New Score: " + kills);
+        scoreText.text = "Score: " + kills;
     }
 
     void OnGameOver() {
         Debug.Log("Game Over. Total Score: " + kills);
         Debug.Log("Restarting");
 
-        Application.LoadLevel(Application.loadedLevel);
+        kills = 0;
+        
+        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+
+        foreach (GameObject enemy in enemies) {
+            Destroy(enemy);
+            Instantiate(playerPrefab);
+            scoreText.text = "Score: 0";
+        }
     }
 
 }
