@@ -39,6 +39,11 @@ public class GameController : MonoBehaviour {
         StartCoroutine("setLevel");
     }
 
+    void OnDestroy() {
+        Bullet.OnEnemyDestroyed -= OnEnemyDestroyed;
+        Player.OnGameOver -= OnGameOver;
+    }
+
     IEnumerator setLevel() {
         while (true) {
             yield return new WaitForSeconds(15f);
@@ -52,21 +57,22 @@ public class GameController : MonoBehaviour {
         scoreText.text = "Score: " + kills;
     }
 
+    IEnumerator backToMenu() {
+        yield return new WaitForSeconds(3f);
+
+        Application.LoadLevel("Menu"); 
+    }
+
     void OnGameOver() {
         Debug.Log("Game Over. Total Score: " + kills);
-        Debug.Log("Restarting");
-
-        kills = 0;
-        currentLevel = 1;
         
-        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
-
-        foreach (GameObject enemy in enemies) {
-            Destroy(enemy);
+        if (HighscoreManager.Instance.checkHighscore(kills)) {
+            Debug.Log("A new Highscore!");
+        } else {
+            Debug.Log("No Highscore :(");
         }
-        Instantiate(playerPrefab);
-        scoreText.text = "Score: 0";
-        levelText.text = "Level: 1";
+
+        StartCoroutine ("backToMenu");
 
     }
 
