@@ -2,7 +2,8 @@
 using System.Collections;
 
 public class Player : MonoBehaviour {
-    public GameObject bullet;
+    public GameObject bulletPrefab;
+    public GameObject explosionPrefab;
     public float speed;
 
     public delegate void GameOver();
@@ -58,27 +59,35 @@ public class Player : MonoBehaviour {
 
 
         if (Input.GetKeyDown("space")) {
-            Instantiate(bullet, transform.position + new Vector3(-0.05f, 0, 0), Quaternion.identity);
-            Instantiate(bullet, transform.position + new Vector3(0.05f, 0, 0), Quaternion.identity);
+            Instantiate(bulletPrefab, transform.position + new Vector3(-0.05f, 0, 0), Quaternion.identity);
+            Instantiate(bulletPrefab, transform.position + new Vector3(0.05f, 0, 0), Quaternion.identity);
+            audio.Play();
         }
 
          foreach (Touch touch in Input.touches) {
             if (touch.phase == TouchPhase.Ended) {
-                Instantiate(bullet, transform.position + new Vector3(-0.05f, 0, 0), Quaternion.identity);
-                Instantiate(bullet, transform.position + new Vector3(0.05f, 0, 0), Quaternion.identity);
-   
+                Instantiate(bulletPrefab, transform.position + new Vector3(-0.05f, 0, 0), Quaternion.identity);
+                Instantiate(bulletPrefab, transform.position + new Vector3(0.05f, 0, 0), Quaternion.identity);
+                audio.Play(); 
             }
         }
 	}
 
+    void explode() {
+        Instantiate(explosionPrefab, transform.position, Quaternion.identity);
+        Destroy(gameObject);
+
+    }
+
     void OnTriggerEnter2D(Collider2D enteringCollider) {
         if (enteringCollider.gameObject.tag == "Enemy") {
+            
+            enteringCollider.gameObject.SendMessage("explode", null, SendMessageOptions.DontRequireReceiver);
+            explode();
+
             if (OnGameOver != null) {
                 OnGameOver();
             }
-
-            Destroy(enteringCollider.gameObject);
-            Destroy(gameObject);
         }
     }
 }

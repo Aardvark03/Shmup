@@ -3,6 +3,7 @@ using System.Collections;
 
 public class Biter : MonoBehaviour {
     public float speed;
+    public GameObject explosionPrefab;
 
     float minY;
 
@@ -25,4 +26,9 @@ public class Biter : MonoBehaviour {
             Destroy(gameObject);
         }
 	}
+    
+    void explode() {
+        Instantiate(explosionPrefab, transform.position, Quaternion.identity);
+        Destroy(gameObject);
+    }
 }

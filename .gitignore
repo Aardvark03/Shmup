@@ -1,3 +1,7 @@
 .DS_Store
 *.meta
 Temp/
+Library/
+ProjectSettings/
+*.csproj
+SimpleParticlePack/

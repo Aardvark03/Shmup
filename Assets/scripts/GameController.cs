@@ -3,14 +3,18 @@ using UnityEngine.UI;
 using System.Collections;
 
 public class GameController : MonoBehaviour {
-    int kills;
     public Camera camera;
+
     public Text scoreText;
+    public Text levelText;
+
     public GameObject playerPrefab;
 
     public static Rect worldBounds;
+    public static int currentLevel;
+    int kills;
 
-    void Start() {
+    void Awake() {
         if (camera == null) {
             camera = Camera.main;
         }
@@ -27,8 +31,20 @@ public class GameController : MonoBehaviour {
                                upperRightWorld.y - lowerLeftWorld.y);
 
         kills = 0;
+        currentLevel = 1;
+
         Bullet.OnEnemyDestroyed += OnEnemyDestroyed;
         Player.OnGameOver += OnGameOver;
+
+        StartCoroutine("setLevel");
+    }
+
+    IEnumerator setLevel() {
+        while (true) {
+            yield return new WaitForSeconds(15f);
+            currentLevel += 1;
+            levelText.text = "Level: " + currentLevel;
+        }
     }
 
     void OnEnemyDestroyed() {
@@ -41,14 +57,17 @@ public class GameController : MonoBehaviour {
         Debug.Log("Restarting");
 
         kills = 0;
+        currentLevel = 1;
         
         GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
 
         foreach (GameObject enemy in enemies) {
             Destroy(enemy);
-            Instantiate(playerPrefab);
-            scoreText.text = "Score: 0";
         }
+        Instantiate(playerPrefab);
+        scoreText.text = "Score: 0";
+        levelText.text = "Level: 1";
+
     }
 
 }

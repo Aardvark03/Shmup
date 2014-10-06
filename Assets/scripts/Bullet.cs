@@ -30,7 +30,7 @@ public class Bullet : MonoBehaviour {
                 OnEnemyDestroyed();
             } 
 
-            Destroy(collider.gameObject);
+            collider.gameObject.SendMessage("explode", null, SendMessageOptions.DontRequireReceiver);
             Destroy(gameObject);
         }
     }
